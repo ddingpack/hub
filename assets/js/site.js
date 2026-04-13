@@ -36,6 +36,8 @@
     }
   });
   backdrop?.addEventListener('click', closeMenu);
+  window.addEventListener('resize', () => { if (window.innerWidth > 980) closeMenu(); if (window.innerWidth > 980) closeAssist(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closeMenu(); closeAssist(); } });
 
   const assist = document.querySelector('[data-assist-open]') ? document.getElementById('assist-panel') : null;
   const assistBackdrop = document.querySelector('[data-assist-backdrop]');
