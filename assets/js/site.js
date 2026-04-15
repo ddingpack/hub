@@ -1,144 +1,77 @@
+
 (() => {
   const root = document.documentElement;
-  const currentPath = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-
-  function setTheme(theme) {
-    root.setAttribute('data-theme', theme);
-    localStorage.setItem('ddingpack-theme', theme);
-    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
-      const isDark = theme === 'dark';
-      const label = isDark ? '다크 모드' : '라이트 모드';
-      const icon = isDark ? '🌙' : '☀️';
-      const iconEl = btn.querySelector('.mode-icon');
-      const labelEl = btn.querySelector('.mode-label');
-      if (iconEl) iconEl.textContent = icon;
-      if (labelEl) labelEl.textContent = label;
-      btn.setAttribute('aria-label', label);
-    });
-  }
-
-  setTheme(localStorage.getItem('ddingpack-theme') || 'dark');
-  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
-    btn.addEventListener('click', () => setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
-  });
-
-  const menuBtn = document.querySelector('[data-menu-open]');
-  const sidebar = document.querySelector('.sidebar');
-  const backdrop = document.querySelector('.sidebar-backdrop');
-  const closeMenu = () => {
-    sidebar?.classList.remove('is-open');
-    backdrop?.classList.remove('is-open');
+  const saved = localStorage.getItem('ddingpack-theme') || 'dark';
+  root.classList.toggle('dark', saved === 'dark');
+  const syncTheme = () => {
+    const dark = root.classList.contains('dark');
+    localStorage.setItem('ddingpack-theme', dark ? 'dark' : 'light');
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = dark ? 'dark_mode' : 'light_mode');
+    document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = dark ? '다크 모드' : '라이트 모드');
+    document.querySelectorAll('[data-theme-toggle]').forEach(el => el.setAttribute('aria-label', dark ? '다크 모드' : '라이트 모드'));
   };
-  menuBtn?.addEventListener('click', () => {
-    if (window.innerWidth <= 980) {
-      sidebar?.classList.add('is-open');
-      backdrop?.classList.add('is-open');
-    }
-  });
-  backdrop?.addEventListener('click', closeMenu);
-  window.addEventListener('resize', () => { if (window.innerWidth > 980) closeMenu(); if (window.innerWidth > 980) closeAssist(); });
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closeMenu(); closeAssist(); } });
-
-  const assist = document.querySelector('[data-assist-open]') ? document.getElementById('assist-panel') : null;
-  const assistBackdrop = document.querySelector('[data-assist-backdrop]');
-  const openAssist = () => { assist?.classList.add('is-open'); assistBackdrop?.classList.add('is-open'); };
-  const closeAssist = () => { assist?.classList.remove('is-open'); assistBackdrop?.classList.remove('is-open'); };
-  document.querySelectorAll('[data-assist-open]').forEach((btn) => btn.addEventListener('click', openAssist));
-  document.querySelectorAll('[data-assist-close]').forEach((btn) => btn.addEventListener('click', closeAssist));
-  assistBackdrop?.addEventListener('click', closeAssist);
-  document.querySelectorAll('.nav-link, .rail-link, .utility-button, .rail-brand').forEach((el) => {
-    el.addEventListener('click', () => {
-      if (window.innerWidth <= 980) closeMenu();
-      closeAssist();
-    });
-  });
-
-  function resolveActiveKey() {
-    if (currentPath === 'download.html') return 'download';
-    if (currentPath === 'install-guide.html') return 'guide';
-    if (currentPath === 'allowed-mods.html') return 'mods';
-    if (currentPath === 'notice.html' || currentPath === 'notice-beta-open.html') return 'notice';
-    if (currentPath === 'faq.html') return 'faq';
-    if (currentPath === 'privacy.html') return 'privacy';
-    if (currentPath === 'terms.html') return 'terms';
-    return 'home';
-  }
-
-  const activeKey = resolveActiveKey();
-  document.querySelectorAll('[data-nav-key]').forEach((el) => {
-    const match = el.dataset.navKey === activeKey;
-    el.classList.toggle('is-current', match);
-    if (match) el.setAttribute('aria-current', 'page');
-    else el.removeAttribute('aria-current');
-  });
-  document.querySelectorAll('[data-rail-key]').forEach((el) => {
-    const match = el.dataset.railKey === activeKey;
-    el.classList.toggle('is-active', match);
-    if (match) el.setAttribute('aria-current', 'page');
-    else el.removeAttribute('aria-current');
-  });
-  if (activeKey === 'home') {
-    document.querySelector('.rail-brand')?.classList.add('is-active');
-  }
-
-  const overlay = document.querySelector('[data-welcome-overlay]');
-  const shouldForceWelcome = currentPath === 'index.html' && new URLSearchParams(location.search).get('welcome') === '1';
-  const openWelcome = () => {
-    if (!overlay) return;
-    overlay.classList.remove('is-hidden');
-    document.body.classList.add('welcome-open');
-  };
-  const closeWelcome = () => {
-    if (!overlay) return;
-    overlay.classList.add('is-hidden');
-    document.body.classList.remove('welcome-open');
-    localStorage.setItem('ddingpack-welcome-seen', '1');
-    const url = new URL(location.href);
-    url.searchParams.delete('welcome');
-    history.replaceState({}, '', url.toString());
-  };
-  document.querySelector('[data-welcome-enter]')?.addEventListener('click', closeWelcome);
-  document.querySelectorAll('[data-welcome-reopen]').forEach((btn) => btn.addEventListener('click', (event) => {
-    event.preventDefault();
-    localStorage.removeItem('ddingpack-welcome-seen');
-    if (currentPath === 'index.html') openWelcome();
-    else location.href = 'index.html?welcome=1';
+  syncTheme();
+  document.querySelectorAll('[data-theme-toggle]').forEach(btn => btn.addEventListener('click', () => {
+    root.classList.toggle('dark');
+    syncTheme();
   }));
-  if (overlay) {
+
+  const drawer = document.querySelector('[data-mobile-drawer]');
+  const openDrawer = () => drawer?.classList.add('show');
+  const closeDrawer = () => drawer?.classList.remove('show');
+  document.querySelectorAll('[data-mobile-menu]').forEach(btn => btn.addEventListener('click', openDrawer));
+  document.querySelectorAll('[data-mobile-close]').forEach(btn => btn.addEventListener('click', closeDrawer));
+
+  const assist = document.querySelector('[data-assist]');
+  const openAssist = () => assist?.classList.remove('hidden');
+  const closeAssist = () => assist?.classList.add('hidden');
+  document.querySelectorAll('[data-assist-open]').forEach(btn => btn.addEventListener('click', openAssist));
+  document.querySelectorAll('[data-assist-close]').forEach(btn => btn.addEventListener('click', closeAssist));
+
+  const welcome = document.querySelector('.welcome-overlay');
+  const openWelcome = () => welcome?.classList.add('show');
+  const closeWelcome = () => welcome?.classList.remove('show');
+  if (welcome) {
     const seen = localStorage.getItem('ddingpack-welcome-seen') === '1';
-    if (shouldForceWelcome || !seen) openWelcome();
-    else overlay.classList.add('is-hidden');
+    if (!seen) openWelcome();
+    document.querySelectorAll('[data-welcome-enter]').forEach(btn => btn.addEventListener('click', () => {
+      localStorage.setItem('ddingpack-welcome-seen', '1');
+      closeWelcome();
+    }));
+    document.querySelectorAll('[data-reopen-welcome]').forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openWelcome();
+    }));
+    welcome.addEventListener('click', (e) => {
+      if (e.target === welcome) closeWelcome();
+    });
   }
 
-  const toast = document.querySelector('[data-toast]');
-  if (toast && localStorage.getItem('ddingpack-toast-dismissed') === '1') toast.remove();
-  document.querySelector('[data-toast-close]')?.addEventListener('click', () => {
-    localStorage.setItem('ddingpack-toast-dismissed', '1');
-    toast?.remove();
+  document.querySelectorAll('.toast-close').forEach(btn => btn.addEventListener('click', ()=> btn.closest('.toast-area')?.remove()));
+
+  document.querySelectorAll('[data-preview-image]').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const src = trigger.getAttribute('data-preview-image');
+      const alt = trigger.getAttribute('data-preview-alt') || '이미지 확대 보기';
+      let modal = document.querySelector('.image-preview-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'image-preview-modal';
+        modal.innerHTML = `<div class="image-preview-dialog"><div class="image-preview-head"><div><div class="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">Preview</div><div class="font-headline text-2xl font-bold">적용 예시 확대 보기</div></div><button class="image-preview-close" type="button" aria-label="이미지 닫기"><span class="material-symbols-outlined">close</span></button></div><img alt="" /></div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => { if (e.target === modal || e.target.closest('.image-preview-close')) modal.classList.remove('show'); });
+      }
+      const img = modal.querySelector('img');
+      img.src = src; img.alt = alt;
+      modal.classList.add('show');
+    });
   });
 
-  (function initChannelTalk() {
-    const w = window;
-    if (w.ChannelIO) return;
-    const ch = function () { ch.c(arguments); };
-    ch.q = [];
-    ch.c = function (args) { ch.q.push(args); };
-    w.ChannelIO = ch;
-    function loadScript() {
-      if (w.ChannelIOInitialized) return;
-      w.ChannelIOInitialized = true;
-      const s = document.createElement('script');
-      s.type = 'text/javascript';
-      s.async = true;
-      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
-      const x = document.getElementsByTagName('script')[0];
-      x.parentNode.insertBefore(s, x);
-    }
-    if (document.readyState === 'complete') loadScript();
-    else {
-      w.addEventListener('DOMContentLoaded', loadScript);
-      w.addEventListener('load', loadScript);
-    }
-    w.ChannelIO('boot', { pluginKey: '5a172fdc-10ee-45ca-b437-b1c63541c969', language: 'ko' });
+  (function initChannelTalk(){
+    var w=window; if(w.ChannelIO) return;
+    var ch=function(){ ch.c(arguments); }; ch.q=[]; ch.c=function(args){ ch.q.push(args); }; w.ChannelIO=ch;
+    function l(){ if(w.ChannelIOInitialized) return; w.ChannelIOInitialized=true; var s=document.createElement('script'); s.type='text/javascript'; s.async=true; s.src='https://cdn.channel.io/plugin/ch-plugin-web.js'; var x=document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s,x); }
+    if(document.readyState==='complete') l(); else w.addEventListener('DOMContentLoaded', l);
+    w.ChannelIO('boot',{pluginKey:'5a172fdc-10ee-45ca-b437-b1c63541c969', language:'ko'});
   })();
 })();
