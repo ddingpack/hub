@@ -248,3 +248,6 @@ html.dark body .bg-surface-container-lowest\/40{background-color:rgba(255,255,25
 .allowed-mods-page .ghost-border strong{
   color:var(--text-main)!important;
 }
+
+.assist-fab,[data-assist]{display:none!important;}
+.theme-toggle.is-active{background:var(--bg-surface)!important;color:var(--text-main)!important;border-color:color-mix(in srgb, var(--border-color) 38%, transparent)!important;}

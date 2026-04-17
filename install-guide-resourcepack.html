@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>특수광물 발광 + 테두리 리소스팩 설치 가이드 - DDING PACK</title>
+  <meta name="description" content="띵타이쿤 온라인 특수광물 리소스팩 설치 가이드. Fabric API, Continuity, Server Pack Unlocker 기준의 설치 흐름 안내" />
+  <meta name="theme-color" content="#071019" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="install-guide">
+  <div class="site-bg" aria-hidden="true">
+    <div class="site-orb orb-a"></div>
+    <div class="site-orb orb-b"></div>
+    <div class="site-orb orb-c"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-shell">
+      <a class="brand" href="index.html" aria-label="DDING PACK 홈으로 이동">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 8.5 12 4l7 4.5v7L12 20l-7-4.5v-7Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 4v16M5 8.5l7 4 7-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-title">DDING PACK</span>
+          <span class="brand-subtitle">Minecraft Resource Archive</span>
+        </span>
+      </a>
+
+      <div class="header-right">
+        <nav class="site-nav" aria-label="주요 메뉴">
+          <a href="index.html" data-nav-link>Home</a>
+          <a href="notice.html" data-nav-link>공지사항</a>
+          <a href="download.html" data-nav-link>자료실</a>
+          <a href="install-guide.html" data-nav-link>설치 가이드</a>
+          <a href="allowed-mods.html" data-nav-link>허용 모드</a>
+        </nav>
+
+        <div class="toolbar-group">
+          <div class="theme-switch" aria-label="테마 전환">
+            <button type="button" class="theme-toggle" data-theme-value="light" aria-pressed="false">LIGHT</button>
+            <button type="button" class="theme-toggle" data-theme-value="dark" aria-pressed="false">DARK</button>
+          </div>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            data-menu-toggle
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            aria-label="메뉴 열기"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" data-mobile-menu aria-label="모바일 메뉴">
+        <a href="index.html" data-nav-link>Home</a>
+        <a href="notice.html" data-nav-link>공지사항</a>
+        <a href="download.html" data-nav-link>자료실</a>
+        <a href="install-guide.html" data-nav-link>설치 가이드</a>
+        <a href="allowed-mods.html" data-nav-link>허용 모드</a>
+        <div class="theme-switch" aria-label="모바일 테마 전환">
+          <button type="button" class="theme-toggle" data-theme-value="light" aria-pressed="false">LIGHT</button>
+          <button type="button" class="theme-toggle" data-theme-value="dark" aria-pressed="false">DARK</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+ 
+<main class="page-main">
+  <section class="page-hero">
+    <div class="container">
+      <article class="glass page-hero-card reveal">
+        <span class="eyebrow page-eyebrow">Resource Pack Guide</span>
+        <div class="page-hero-top">
+          <div>
+            <h1 class="page-title">특수광물 발광 + 테두리 리소스팩 설치 가이드</h1>
+            <p class="page-summary">
+              기존 설치 가이드 내용을 기준으로, 리소스팩 설치 순서와 필수 모드, 적용 예시, 자주 생기는 문제를 더 읽기 쉬운 카드형 구조로 정리했습니다.
+            </p>
+          </div>
+          <div class="page-meta">
+            <span class="badge">Fabric API 기준</span>
+            <span class="badge">Continuity 권장</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section compact">
+    <div class="container guide-layout">
+      <div>
+        <div class="section-head reveal">
+          <span class="eyebrow page-eyebrow">Step Flow</span>
+          <h2>설치 순서</h2>
+          <p class="lead">원본 텍스트를 단계형 카드로 재구성해, 한 번에 따라 하기 쉬운 흐름으로 정리했습니다.</p>
+        </div>
+
+        <div class="guide-steps">
+          <article class="glass-card step-card reveal">
+            <span class="step-label">Step 01</span>
+            <h3>Server Pack Unlocker를 먼저 설치합니다</h3>
+            <p class="inline-note">개인 리소스팩을 서버 리소스팩 위에 배치하기 위한 선행 준비 단계입니다.</p>
+          </article>
+          <article class="glass-card step-card reveal">
+            <span class="step-label">Step 02</span>
+            <h3>Fabric API 환경을 준비합니다</h3>
+            <p class="inline-note">본 리소스팩은 Fabric API 환경 기준으로만 안내합니다.</p>
+          </article>
+          <article class="glass-card step-card reveal">
+            <span class="step-label">Step 03</span>
+            <h3>Continuity를 함께 설치합니다</h3>
+            <p class="inline-note">발광 텍스처와 연결 텍스처 표현을 위해 권장됩니다.</p>
+          </article>
+          <article class="glass-card step-card reveal">
+            <span class="step-label">Step 04</span>
+            <h3>리소스팩 배치 순서를 맞춥니다</h3>
+            <p class="inline-note">특수광물 리소스팩이 띵타이쿤 온라인 공식 리소스팩보다 위에 오도록 배치해야 합니다.</p>
+            <div class="tags">
+              <span class="tag">위 · 특수광물 리소스팩</span>
+              <span class="tag">아래 · 띵타이쿤 온라인 공식 리소스팩</span>
+            </div>
+          </article>
+          <article class="glass-card step-card reveal">
+            <span class="step-label">Step 05</span>
+            <h3>Continuity의 빛나는 텍스쳐 옵션을 켜짐으로 설정합니다</h3>
+            <p class="inline-note">해당 옵션이 꺼져 있으면 발광 효과가 정상 적용되지 않을 수 있습니다.</p>
+          </article>
+        </div>
+      </div>
+
+      <aside>
+        <article class="glass-card media-card reveal">
+          <span class="eyebrow page-eyebrow">Preview</span>
+          <div class="media-frame">
+            <img src="image.png" alt="특수광물 리소스팩 적용 예시 이미지" />
+          </div>
+          <p class="inline-note">적용 예시 이미지는 실제로 알아볼 수 있는 크기로 유지했습니다.</p>
+        </article>
+
+        <article class="glass-card media-card reveal" style="margin-top:18px;">
+          <span class="eyebrow page-eyebrow">Additional Notes</span>
+          <div class="info-list">
+            <div class="info-row"><strong>필수 모드</strong><span>Fabric API / Continuity / Server Pack Unlocker</span></div>
+            <div class="info-row"><strong>허용 모드</strong><span><a href="allowed-mods.html">전체 목록 확인</a></span></div>
+            <div class="info-row"><strong>문의 채널</strong><span>우측 하단 채널톡</span></div>
+          </div>
+        </article>
+      </aside>
+    </div>
+  </section>
+</main>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-shell">
+        <div class="footer-top">
+          <div>
+            <h2 class="footer-title">DDING PACK</h2>
+            <p class="footer-highlight">띵타이쿤 플레이어를 위한 비공식 리소스팩 배포 페이지</p>
+            <p class="footer-desc">DDING PACK은 띵타이쿤 유저를 위해 제작된 비공식 리소스팩 사이트이며, 공식 운영진과 무관합니다.</p>
+            <p class="footer-desc">사이트 내 사용된 게임 관련 명칭 및 리소스의 출처와 권리는 “띵타이쿤 온라인”에 있습니다.</p>
+          </div>
+          <div class="footer-links">
+            <a href="privacy.html">개인정보처리방침</a>
+            <a href="terms.html">이용약관</a>
+            <span>© 2026 DDING PACK</span>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>정적 배포 구조 · 다운로드 링크와 상대경로 유지</span>
+          <span>문의 및 개선 요청은 우측 하단 채널톡을 이용해 주세요.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/site.js"></script>
+</body>
+</html>

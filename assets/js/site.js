@@ -1,20 +1,24 @@
 
 (() => {
   const root = document.documentElement;
-  const saved = localStorage.getItem('ddingpack-theme') || 'dark';
-  root.classList.toggle('dark', saved === 'dark');
-  const syncTheme = () => {
-    const dark = root.classList.contains('dark');
-    localStorage.setItem('ddingpack-theme', dark ? 'dark' : 'light');
-    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = dark ? 'dark_mode' : 'light_mode');
-    document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = dark ? '다크 모드' : '라이트 모드');
-    document.querySelectorAll('[data-theme-toggle]').forEach(el => el.setAttribute('aria-label', dark ? '다크 모드' : '라이트 모드'));
+  const savedTheme = localStorage.getItem('ddingpack-theme') || 'dark';
+  const applyTheme = (theme) => {
+    const isDark = theme !== 'light';
+    root.classList.toggle('dark', isDark);
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('ddingpack-theme', isDark ? 'dark' : 'light');
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = isDark ? 'dark_mode' : 'light_mode');
+    document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = isDark ? '다크 모드' : '라이트 모드');
+    document.querySelectorAll('[data-theme-toggle]').forEach(el => el.setAttribute('aria-label', isDark ? '다크 모드' : '라이트 모드'));
+    document.querySelectorAll('.theme-toggle[data-theme-value]').forEach(btn => {
+      const active = btn.getAttribute('data-theme-value') === (isDark ? 'dark' : 'light');
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      btn.classList.toggle('is-active', active);
+    });
   };
-  syncTheme();
-  document.querySelectorAll('[data-theme-toggle]').forEach(btn => btn.addEventListener('click', () => {
-    root.classList.toggle('dark');
-    syncTheme();
-  }));
+  applyTheme(savedTheme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(btn => btn.addEventListener('click', () => applyTheme(root.classList.contains('dark') ? 'light' : 'dark')));
+  document.querySelectorAll('.theme-toggle[data-theme-value]').forEach(btn => btn.addEventListener('click', () => applyTheme(btn.getAttribute('data-theme-value'))));
 
   const drawer = document.querySelector('[data-mobile-drawer]');
   const openDrawer = () => drawer?.classList.add('show');
@@ -22,30 +26,24 @@
   document.querySelectorAll('[data-mobile-menu]').forEach(btn => btn.addEventListener('click', openDrawer));
   document.querySelectorAll('[data-mobile-close]').forEach(btn => btn.addEventListener('click', closeDrawer));
 
-  const assist = document.querySelector('[data-assist]');
-  const openAssist = () => assist?.classList.remove('hidden');
-  const closeAssist = () => assist?.classList.add('hidden');
-  document.querySelectorAll('[data-assist-open]').forEach(btn => btn.addEventListener('click', openAssist));
-  document.querySelectorAll('[data-assist-close]').forEach(btn => btn.addEventListener('click', closeAssist));
-
   const welcome = document.querySelector('.welcome-overlay');
   const openWelcome = () => welcome?.classList.add('show');
   const closeWelcome = () => welcome?.classList.remove('show');
   if (welcome) {
     const seen = localStorage.getItem('ddingpack-welcome-seen') === '1';
-    if (!seen) openWelcome();
+    if (!seen || location.hash === '#welcome') openWelcome();
     document.querySelectorAll('[data-welcome-enter]').forEach(btn => btn.addEventListener('click', () => {
       localStorage.setItem('ddingpack-welcome-seen', '1');
       closeWelcome();
+      if (location.hash === '#welcome') history.replaceState(null, '', location.pathname + location.search);
     }));
-    document.querySelectorAll('[data-reopen-welcome]').forEach(btn => btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openWelcome();
-    }));
-    welcome.addEventListener('click', (e) => {
-      if (e.target === welcome) closeWelcome();
-    });
+    welcome.addEventListener('click', (e) => { if (e.target === welcome) closeWelcome(); });
   }
+  document.querySelectorAll('[data-reopen-welcome]').forEach(btn => btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('ddingpack-welcome-seen');
+    if (welcome) openWelcome(); else window.location.href = 'index.html#welcome';
+  }));
 
   document.querySelectorAll('.toast-close').forEach(btn => btn.addEventListener('click', ()=> btn.closest('.toast-area')?.remove()));
 
